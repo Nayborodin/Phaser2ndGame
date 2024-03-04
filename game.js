@@ -15,6 +15,7 @@ var config = {
         update: update
     }
 };
+var star
 function preload ()
 {
     this.load.image('crate','assets/Object/Crate.png');
@@ -24,4 +25,5 @@ function preload ()
     this.load.image('tree2','assets/Object/Tree_2');
     this.load.image('igloo','assets/Object/Igloo');
     this.load.image('background','assets/background');
+    this.load.image('star','assets/star');
 }
