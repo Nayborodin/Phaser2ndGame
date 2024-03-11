@@ -28,14 +28,14 @@ var star;
 var cursors;
 function preload ()
 {
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 90, frameHeight: 90 });
     this.load.image('crate','assets/Object/Crate.png');
     this.load.image('icebox','assets/Object/IceBox.png');
     this.load.image('stone','assets/Object/Stone.png');
     this.load.image('tree1','assets/Object/Tree_1.png');
     this.load.image('tree2','assets/Object/Tree_2.png');
     this.load.image('igloo','assets/Object/Igloo.png');
-    this.load.image('background','assets/background.jpg');
+    this.load.image('background','assets/2.png');
     this.load.image('star','assets/star.png');
     this.load.image('platform','assets/platform.png');
     this.load.image('14','assets/Tiles/14.png');
@@ -44,6 +44,7 @@ function preload ()
 }
 function create ()
 {
+    this.add.image(600, 500, 'background');
 //налаштування камери
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounce(0, 0, worldWidth, 1080);
@@ -62,35 +63,6 @@ function create ()
         .setOrigin(0,0)
         .refreshBody();
     }
-    player = this.physics.add.sprite(800, 800, 'dude');
-    player
-    .setBounce(0.2)
-    .setCollideWorldBounds(false)
-    .setDepht(5)
-
-    /*this.anims.create({
-        key: 'turn',
-        frames: [ { key: 'dude', frame: 4 } ],
-        frameRate: 20
-    });*/
-
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-        frameRate: 10,
-        repeat: -1
-    });
-    cursors = this.input.keyboard.createCursorKeys();
-    stars = this.physics.add.group({
-        key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
-
-    stars.children.iterate(function (child) {
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
     //платформи в повітрі
     for (var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(256,500))
     {
