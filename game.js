@@ -38,13 +38,22 @@ function preload ()
     this.load.image('background','assets/background.jpg');
     this.load.image('star','assets/star.png');
     this.load.image('platform','assets/platform.png');
+    this.load.image('14','assets/Tiles/14.png');
+    this.load.image('15','assets/Tiles/15.png');
+    this.load.image('16','assets/Tiles/16.png');
 }
 function create ()
 {
+//налаштування камери
+    this.cameras.main.setBounds(0, 0, worldWidth, 1080);
+    this.physics.world.setBounce(0, 0, worldWidth, 1080);
+//камера слідкує за гравцем
+    this.cameras.main.startFollow(player);
+
     this.add.tileSprite(0,0,worldWidth, 1080,"background")
     .setOrigin(0,0)
     .setScale(1)
-    .setDepth(0);
+    .setDepth(5);
     platforms = this.physics.add.staticGroup();
     for (var x = 0; 0 < worldWidth; x = x + 128)
     {
@@ -58,7 +67,6 @@ function create ()
     .setBounce(0.2)
     .setCollideWorldBounds(false)
     .setDepht(5)
-    };
 
     /*this.anims.create({
         key: 'turn',
@@ -83,6 +91,19 @@ function create ()
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
     });
+    //платформи в повітрі
+    for (var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(256,500))
+    {
+      var y=Phaser.Math.Beetween(128,810)
+      platforms.create(x,y, '14')
+      var i
+      for(i=1; i<=Phaser.Math.Between(1,5); i++)
+      {
+        platforms.create(x + 128 * i, y, '15')
+      }
+      platforms.create(x + 128 * i, y, '16')
+    }
+}
 function update ()
 {
     if (gameOver)
