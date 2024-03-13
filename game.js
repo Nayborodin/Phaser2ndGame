@@ -46,7 +46,7 @@ function preload ()
 function create ()
 {
     this.add.image(1000, 540, 'background');
-    //створюємо платформи
+//створюємо платформи
 platforms = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + 128)
     {
@@ -56,37 +56,18 @@ platforms = this.physics.add.staticGroup();
         .setOrigin(0,0)
         .refreshBody();
     }
+    //платформи в повітрі
+    platforms = this.physics.aa.staticGroup();
 
-
-    this.add.tileSprite(0,0,worldWidth, 1080,"background")
-    .setOrigin(0,0)
-    .setScale(1)
-    .setDepth(5);
-//платформи в повітрі
-    for (var x=0; x<worldWidth; x=x+Phaser.Math.FloatBetween(256,500))
+    for(var x =0; x <= worldWidth; x = x + 128)
     {
-      var y=Phaser.Math.Beetween(128,810)
-      platforms.create(x,y, '14')
-      var i
-      for(i=1; i<=Phaser.Math.Between(1,5); i++)
-      {
-        platforms.create(x + 128 * i, y, '15')
-      }
-      platforms.create(x + 128 * i, y, '16')
+        platforms.create(x,1080 - 128, '14').setOrigin(0,0).refreshBody(); 
     }
-//створюємо гравця
-    player = this.physics.add.sprite(800, 800, 'dude')
-    player
-    .setBounds(0,2)
-    .setCollideWorldBonuds(true)
-    /setDepth(5);
+    //object = this.physics.add.staticGroup();
+    //function createWorldObjects(Object, assets)
     
-    this.physics.add.collider(player,platforms);
-//налаштування камери
-    this.cameras.main.setBounds(0, 0, worldWidth, 1080);
-    this.physics.world.setBounds(0, 0, worldWidth, 1080);
-//камера слідкує за гравцем
-    this.cameras.main.startFollow(player);
+    //for (var x = 0; x <= worldWidth; x = x + Phaser.Math.FloatBetween(256,500))
+    
 }
 function update ()
 {
