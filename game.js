@@ -30,6 +30,7 @@ var tree1;
 var tree2;
 function preload ()
 {
+    this.load.sprite
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 90, frameHeight: 90 });
     this.load.image('crate','assets/Object/Crate.png');
     this.load.image('icebox','assets/Object/IceBox.png');
@@ -47,13 +48,11 @@ function preload ()
 }
 function create ()
 {
-    this.add.image(1000, 540, 'background');
+    this.add.image(960, 540, 'background');
 //створюємо платформи
 platforms = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + 128)
-    {
-        console.log(x)
-        platforms
+    {        platforms
         .create(x , 1080 - 128, '2')
         .setOrigin(0,0)
         .refreshBody();
@@ -77,7 +76,7 @@ platforms = this.physics.add.staticGroup();
     player = this.physics.add.sprite(800, 800, 'dude');
     player
     .setBounce(0.2)
-    .setCollideWorldBounds(false)
+    .setCollideWorldBounds(true)
     .setDepth(5);
     //колізія гравця та платформи
     this.physics.add.collider(player, platforms);
@@ -104,7 +103,7 @@ platforms = this.physics.add.staticGroup();
     cursors = this.input.keyboard.createCursorKeys();
     stars = this.physics.add.group({
         key: 'star',
-        repeat: 111,
+        repeat: ,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
     
@@ -113,13 +112,12 @@ platforms = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(1000,1500))
     {
         var y = Phaser.Math.FloatBetween(100,1000)
-        console.log(x, y)
         tree1
         .create(x, 1080 - 128, 'tree1')
         .setOrigin(0, 1)
-        .setScale(Phaser.Math.FloatBetween(0.8, 1.5))
+        .setScale(Phaser.Math.FloatBetween(0.5, 1))
         .setDepth(Phaser.Math.Between(1, 10))
-        console.log(tree1,X, tree1,Y)
+        // console.log(tree1,x, tree1,y)
     }
     
 }
