@@ -3,7 +3,7 @@ var config = {
     width: 1920,
     height: 1080,
     parent: game,
-    playerSpeed: 1000,
+    playerSpeed: 1500,
     physics: {
         default: 'arcade',
         arcade: {
@@ -17,7 +17,9 @@ var config = {
         update: update
     }
 };
+var worldWidth = config.width * 10
 var game = new Phaser.Game(config);
+var lifeText
 var player;
 var score=0;
 var platforms;
@@ -31,14 +33,14 @@ var tree2;
 function preload ()
 {
     this.load.sprite
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 90, frameHeight: 90 });
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('crate','assets/Object/Crate.png');
     this.load.image('icebox','assets/Object/IceBox.png');
     this.load.image('stone','assets/Object/Stone.png');
     this.load.image('tree1','assets/Object/Tree_1.png');
     this.load.image('tree2','assets/Object/Tree_2.png');
     this.load.image('igloo','assets/Object/Igloo.png');
-    this.load.image('background','assets/2.jpg');
+    this.load.image('bg','assets/2.jpg');
     this.load.image('star','assets/star.png');
     this.load.image('platform','assets/platform.png');
     this.load.image('14','assets/Tiles/14.png');
@@ -48,9 +50,15 @@ function preload ()
 }
 function create ()
 {
-    this.add.image(960, 540, 'background');
+    //встановив фон
+    this.add.tileSprite(0, 0, worldWidth, 1080, "bg")
+        .setOrigin(0, 0)
+        .setScale(1.5)
+        .setDepth(0);
 //створюємо платформи
 platforms = this.physics.add.staticGroup();
+platforms
+//.setCollideWorldBounds(true)
     for (var x = 0; x < worldWidth; x = x + 128)
     {        platforms
         .create(x , 1080 - 128, '2')
@@ -72,14 +80,25 @@ platforms = this.physics.add.staticGroup();
         platforms.create(x + 128 * i, y, '16')
     }
     //створюємо гравця
-    //player = this.physics.add.staticGroup();
+    player = this.physics.add.staticGroup();
     player = this.physics.add.sprite(800, 800, 'dude');
     player
     .setBounce(0.2)
     .setCollideWorldBounds(true)
     .setDepth(5);
-    //колізія гравця та платформи
-    this.physics.add.collider(player, platforms);
+
+    
+    
+    //this.physics.add.collider(player, platforms);
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    this.cameras.main.setBounds(0, 0, worldWidth, 1080);
+    this.physics.world.setBounds(0, 0, worldWidth, 1080);
+    this.cameras.main.startFollow(player);
+
+    stone = this.physics.add.staticGroup();
+    tree1 = this.physics.add.staticGroup();
 
     this.anims.create({
         key: 'left',
@@ -100,10 +119,12 @@ platforms = this.physics.add.staticGroup();
         frameRate: 10,
         repeat: -1
     });
+
     cursors = this.input.keyboard.createCursorKeys();
+    //this.physics.add.collider(star, platforms);
     stars = this.physics.add.group({
         key: 'star',
-        repeat: ,
+        repeat: 100,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
     
@@ -119,13 +140,46 @@ platforms = this.physics.add.staticGroup();
         .setDepth(Phaser.Math.Between(1, 10))
         // console.log(tree1,x, tree1,y)
     }
+    for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(600, 1000)) {
+
+        stone
+            .create(x, 1080 - 128, 'stone')
+            .setOrigin(0, 1)
+            .setScale(Phaser.Math.FloatBetween(3, 1.5, 0.2))
+            .setDepth(Phaser.Math.Between(1, 10));
+    }
+    //рахунок
+    scoreText = this.add.text(100, 100, 'Score: 0', { fontSize: '20px', fill: '#FFF' })
+    .setOrigin(0, 0)
+    .setScrollFactor(0)
+
+    lifeText = this.add.text(1500, 100, showLife(), { fontSize: '40px',fill: '#FFF' })
+    .setOrigin(0, 0)
+    .setScrollFactor(0)
+
+    //var resetButton = this.add.text(400, 450, 'reset',{ fontSize: '40px', fill: '#CCC'})
+    //.setInteractive()
+    //.setScrollFactor(0);
+    //resetButton.on('pointerdown', function () {
+       // console.log('restart')
+       // refreshBody()
+    //});
     
 }
 function update ()
 {
-    if (gameOver)
-    {
-        return;
+    if(cursors.down.isDown){
+        x= player.x
+        y= player.y
+        defuse = this.physics.add.sprite(x, y, 'defuse')
+        //.setScale(0,2)
+        .setVelocityX (500)
+        .setDepth(5);
+        this.physics.add.collider(tnt, defuse,  (tnt) => {
+            tnt.disableBody (true, true);
+            defuse.disableBody (true, true);
+        },null,this);
+        
     }
 
     if (cursors.left.isDown)
@@ -151,4 +205,15 @@ function update ()
     {
         player.setVelocityY(-330);
     }
+    
 }
+function showLife() {
+    var lifeLine = ''
+
+    for (var i = 0; i < lifeLine; i++) {
+        lifeLine = lifeLine + '❤'
+    }
+
+    return lifeLine
+}
+
