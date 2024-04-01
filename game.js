@@ -186,7 +186,7 @@ function update ()
     }
     else if (cursors.up.isDown)
     {
-        player.setVelocityY(2000)
+        player.setVelocityY(2500)
 
     }
     else
