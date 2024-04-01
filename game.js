@@ -59,9 +59,8 @@ function create ()
         .setDepth(0);
 //створюємо платформи
 platforms = this.physics.add.staticGroup();
-platforms
-//.setCollideWorldBounds(true)
-    for (var x = 0; x < worldWidth; x = x + 128)
+
+    for (var x = 0; x <= worldWidth; x = x + 128)
     {        platforms
         .create(x , 1080 - 128, '2')
         .setOrigin(0,0)
@@ -144,16 +143,6 @@ platforms
         setXY: { x: 12, y: 0, stepX: 70 }
     });
 
-    //this.physics.add.collider(star, platforms);
-
-    //stars.children.iterate(function (child) {
-
-        //child.setBounceY(Phaser.Math.FloatBetween(0.6, 1));
-        //child.setDepth(10);
-
-    //});
-
-    //this.physics.add.overlap(player, stars, collectStar, null, this);
     //додаємо об'єкти випадковим чином
     tree1 = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(1000,1500))
@@ -164,7 +153,7 @@ platforms
         .setOrigin(0, 1)
         .setScale(Phaser.Math.FloatBetween(0.5, 1))
         .setDepth(Phaser.Math.Between(1, 10))
-        // console.log(tree1,x, tree1,y)
+
     }
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(600, 1000)) {
 
