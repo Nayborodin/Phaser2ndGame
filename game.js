@@ -30,6 +30,8 @@ var star;
 var cursors;
 var tree1;
 var tree2;
+var tnt;
+var defuse;
 function preload ()
 {
     this.load.sprite
@@ -65,6 +67,21 @@ platforms
         .setOrigin(0,0)
         .refreshBody();
     }
+
+    objects = this.physics.add.staticGroup();
+
+    function createWorldObjects(objects, asset) {
+        for (var x = 0; x <= worldWidth; x = x + Phaser.Math.FloatBetween(500, 900)) {
+
+            objects
+                .create(x, 1080 - 128, asset)
+                .setOrigin(0, 1)
+                .setScale(Phaser.Math.FloatBetween(0.8, 1.5,))
+                .setDepth(Phaser.Math.Between(1, 10))
+
+        }
+    }
+    this.physics.add.collider(platforms, objects);
     //платформи в повітрі
     platforms = this.physics.add.staticGroup();
 
@@ -82,16 +99,15 @@ platforms
     //створюємо гравця
     player = this.physics.add.staticGroup();
     player = this.physics.add.sprite(800, 800, 'dude');
+    player.setCollideWorldBounds(true);
     player
     .setBounce(0.2)
     .setCollideWorldBounds(true)
     .setDepth(5);
 
-    
-    
-    //this.physics.add.collider(player, platforms);
-
     cursors = this.input.keyboard.createCursorKeys();
+    
+    this.physics.add.collider(player, platforms);
 
     this.cameras.main.setBounds(0, 0, worldWidth, 1080);
     this.physics.world.setBounds(0, 0, worldWidth, 1080);
@@ -121,13 +137,23 @@ platforms
     });
 
     cursors = this.input.keyboard.createCursorKeys();
-    //this.physics.add.collider(star, platforms);
+
     stars = this.physics.add.group({
         key: 'star',
         repeat: 100,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
-    
+
+    //this.physics.add.collider(star, platforms);
+
+    //stars.children.iterate(function (child) {
+
+        //child.setBounceY(Phaser.Math.FloatBetween(0.6, 1));
+        //child.setDepth(10);
+
+    //});
+
+    //this.physics.add.overlap(player, stars, collectStar, null, this);
     //додаємо об'єкти випадковим чином
     tree1 = this.physics.add.staticGroup();
     for (var x = 0; x < worldWidth; x = x + Phaser.Math.FloatBetween(1000,1500))
@@ -150,37 +176,12 @@ platforms
     }
     //рахунок
     scoreText = this.add.text(100, 100, 'Score: 0', { fontSize: '20px', fill: '#FFF' })
-    .setOrigin(0, 0)
-    .setScrollFactor(0)
 
     lifeText = this.add.text(1500, 100, showLife(), { fontSize: '40px',fill: '#FFF' })
-    .setOrigin(0, 0)
-    .setScrollFactor(0)
-
-    //var resetButton = this.add.text(400, 450, 'reset',{ fontSize: '40px', fill: '#CCC'})
-    //.setInteractive()
-    //.setScrollFactor(0);
-    //resetButton.on('pointerdown', function () {
-       // console.log('restart')
-       // refreshBody()
-    //});
-    
 }
 function update ()
 {
-    if(cursors.down.isDown){
-        x= player.x
-        y= player.y
-        defuse = this.physics.add.sprite(x, y, 'defuse')
-        //.setScale(0,2)
-        .setVelocityX (500)
-        .setDepth(5);
-        this.physics.add.collider(tnt, defuse,  (tnt) => {
-            tnt.disableBody (true, true);
-            defuse.disableBody (true, true);
-        },null,this);
-        
-    }
+    
 
     if (cursors.left.isDown)
     {
@@ -193,6 +194,11 @@ function update ()
         player.setVelocityX(160);
 
         player.anims.play('right', true);
+    }
+    else if (cursors.up.isDown)
+    {
+        player.setVelocityY(2000)
+
     }
     else
     {
@@ -207,10 +213,38 @@ function update ()
     }
     
 }
+function collectStar(player, star) {
+    star.disableBody(true, true);
+
+    var bomb = bombs.create(20, 20, 'bomb');
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
+    Score += 1;
+    ScoreText.setText('Stars: ' + Score);
+
+    if (Score == 138) {
+
+        this.physics.pause();
+
+
+        this.add.text(760, 540, 'Your game time: ' + timeElapsed, { fontSize: '50px', fill: '#0000FF' }).setScrollFactor(0);
+        this.add.text(660, 490, 'For restart press: ENTER', { fontSize: '50px', fill: '#0000FF' }).setScrollFactor(0);
+
+        //Reload canvas
+        document.addEventListener('keyup', function (event) {
+            if (event.code === 'Enter') {
+                window.location.reload();
+            }
+        });
+
+    }
+}
 function showLife() {
     var lifeLine = ''
 
-    for (var i = 0; i < lifeLine; i++) {
+    for (i = 0; i < lifeLine; i++) {
         lifeLine = lifeLine + '❤'
     }
 
