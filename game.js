@@ -24,6 +24,7 @@ var player;
 var score=0;
 var platforms;
 var scoreText;
+var objects
 var gameOver=false;
 var worldWidth=config.width*10;
 var star;
@@ -174,13 +175,13 @@ function update ()
 
     if (cursors.left.isDown)
     {
-        player.setVelocityX(-160);
+        player.setVelocityX(-1600);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
-        player.setVelocityX(160);
+        player.setVelocityX(1600);
 
         player.anims.play('right', true);
     }
